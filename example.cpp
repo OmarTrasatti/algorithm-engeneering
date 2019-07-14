@@ -14,7 +14,9 @@
 int main(int argc, char** argv) {
 
 
-	//declare supported options
+	// START ALGORITHM SETUP 
+	
+	// Passing (?) variables for computing algorithm
 	namespace po = boost::program_options;
 	po::options_description desc("Allowed options");
 
@@ -27,6 +29,10 @@ int main(int argc, char** argv) {
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);
 	po::notify( vm);
+
+	// end parameters passing
+
+	// Compute source and graph path location
 
 	int source = -1;
 	std::string graph_location;
@@ -57,6 +63,13 @@ int main(int argc, char** argv) {
 	NetworKit::Graph* graph;
     Auxiliary::read(graph_location,0,&graph);
 	
+
+	// END ALGORITHM SETUP 
+
+
+	// ALGORTHM COMPUTING SECTION
+
+
     // Creates a max heap
     std::priority_queue <std::pair<int,int>> pq;
 	pq.push(std::make_pair(source,0));
@@ -80,6 +93,8 @@ int main(int argc, char** argv) {
 	}
 
 	return 0;
+	
+	// END COMPUTING SECTION
 
 	return EXIT_SUCCESS;
 
