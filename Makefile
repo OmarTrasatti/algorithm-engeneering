@@ -1,13 +1,13 @@
-CXX = g++-7 -std=c++14
+CXX = g++ -std=c++14
 DBG = -g
 OPT = -O3 -DNDEBUG
 VALGRIND = -g -DNDEBUG
 
 TARGET_A = example
 
-OPTIONS = -lNetworKit -lboost_serialization -lboost_program_options -lboost_system -lboost_filesystem -fopenmp -lboost_timer
-INCLUDEPATH = $(HOME)/networkit/include/ -I/usr/include/valgrind
-PATHLIB = $(HOME)/networkit/
+OPTIONS = -lnetworkit -lboost_serialization -lboost_program_options -lboost_system -lboost_filesystem -fopenmp -lboost_timer
+INCLUDEPATH = $(HOME)/networkit/build_lib/include/ -I/usr/include/valgrind
+PATHLIB = $(HOME)/networkit/build_lib/
 SOURCES_A = $(TARGET_A).cpp Auxiliary.cpp
 
 debug:
