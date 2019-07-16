@@ -9,7 +9,7 @@
 
 
 #include "Auxiliary.h"
-#include <NetworKit/io/METISGraphReader.h>
+#include <NetworKit/io/SNAPGraphReader.h>
 #include <NetworKit/distance/BFS.h>
 #include <NetworKit/distance/Diameter.h>
 #include <boost/program_options.hpp>
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
 	
 	// Read the input graph
 
-	NetworKit::METISGraphReader reader;
+	NetworKit::SNAPGraphReader reader;
 	NetworKit::Graph graph = reader.read(graph_location);
 
 	// Get the last node with maxDegree
@@ -69,6 +69,8 @@ int main(int argc, char** argv) {
 
 
 	std::vector<NetworKit::node> graphNodes = graph.nodes();
+
+	std::cout << "Numero di nodi nel grafo: " << graph.numberOfNodes() << "\n";
 
 	NetworKit::count maxDegree = graph.maxDegree();
 	NetworKit::node nodeWrapper = graphNodes[0];
@@ -82,100 +84,131 @@ int main(int argc, char** argv) {
 
 	// End getting Get maxDegree node
 
+
 	// BFS from retrieved source
 	
 	NetworKit::BFS firstBfs(graph, nodeWrapper);
-	
 	firstBfs.run();
+
+	int BFS_executed = 1;
+
+	std::cout << "Faccio la " << BFS_executed << "a BFS a partire dalla sorgente \n";
+
 	std::vector<NetworKit::edgeweight> distances = firstBfs.getDistances();
 	
-	// end BFS from retrieved source
-
 
 	// Get u's eccentricity, alias i (last level of the first BFS)
 
-	int maxElement = 0;
-
-
-	for (int i = 0; i < distances.size(); i++) {
-		if (distances[i] > maxElement) {
-			maxElement = distances[i];
-		}
-	}
+	double fringeLevel = *max_element(distances.begin(), distances.end());
+	
 
 	// Pick the farest nodes from u (source of initial BFS)
-	
-	std::list<int> listPointersToMaxElements;
+
+	std::list<NetworKit::node> listNodesInFringe;
 	
 	for (int i = 0; i < distances.size() ; i++) {
 		
-		if (distances[i] == maxElement){
-			listPointersToMaxElements.push_back(i);
+		if (distances[i] == fringeLevel){
+
+			listNodesInFringe.push_back(graphNodes[i]);
 
 		}
 
 	}
 
-	int maxEccentricity = 0;
+
+	double maxEccentricity = fringeLevel;
 	int discoveredFringeLevels = 0;
+	
+	NetworKit::node element;
+	int newEccentricity;
 
-	if (listPointersToMaxElements.size() > 0) {
+	while (maxEccentricity <= (2 * fringeLevel)) {
+
+		std::cout << "La frangia a distanza " << fringeLevel << " contiene " << listNodesInFringe.size() << " nodi \n";
 		
-		int element;
-		int maxEccentricity = 0;
-		int newEccentricity;
+		// For all the nodes in the actual fringe..
+		while(!listNodesInFringe.empty()) {
 
-		do {
-			while(!listPointersToMaxElements.empty()) {
-				
-				element = listPointersToMaxElements.front();
-				listPointersToMaxElements.pop_front();
-				
-				NetworKit::BFS onFringeBfs(graph, graphNodes[element]);
-				onFringeBfs.run();
+			int numberOfBfsOnFringe = 0;
 
-				std::vector<NetworKit::edgeweight> onFringeNodeDistances = onFringeBfs.getDistances();
+			// Take one of these nodes
+			element = listNodesInFringe.front();
+			listNodesInFringe.pop_front();
 
-				int newEccentricity = *std::max_element(onFringeNodeDistances.begin(), onFringeNodeDistances.end());
 
-				if (newEccentricity > maxEccentricity) { 
-					maxEccentricity = newEccentricity;
-					} 
-				// maxEccentricity = Becc(u)
-				// std::cout << "maxEccentricity is" << maxEccentricity;
+			// Execute a BFS from actual
+			NetworKit::BFS onFringeBfs(graph, element);
+			onFringeBfs.run();
+
+
+			// Update the number of BFS executed (on fringe and total)
+			numberOfBfsOnFringe ++;
+			BFS_executed ++;
+			std::cout << "Sto alla " << numberOfBfsOnFringe << "a BFS, eseguita sulla frangia a distanza " << fringeLevel << "\n";
+
+
+			// Calculate the eccentricity of actual node 
+			std::vector<NetworKit::edgeweight> onFringeNodeEccentricity = onFringeBfs.getDistances();
+			double newEccentricity = *std::max_element(onFringeNodeEccentricity.begin(), onFringeNodeEccentricity.end());
+
+		
+			// 
+			if (newEccentricity > maxEccentricity) { 
+				maxEccentricity = newEccentricity;
+				} 
+
+			if (maxEccentricity > (2*(fringeLevel-1))) {
+				std::cout << "POSSO BREAKARE \n";
+				break;
 			}
-			
-			
-			// Decrease fringe's level
-			maxElement--;
-				for (int i = 0; i < distances.size() ; i++) {
-			
-					if (distances[i] == maxElement) {
+		}
 
-					listPointersToMaxElements.push_back(i);
+		std::cout << "La massima eccentricità per i nodi sulla frangia a distanza " << fringeLevel << " è: " << maxEccentricity << "\n";
+		// Decrease fringe's level
+		fringeLevel = fringeLevel - 1;
 
-					}
+		
+		// Populate new Fringe (indeed, level i-1)
+			for (int j = 0; j < distances.size() ; j++) {
+		
+				if (distances[j] == fringeLevel) {
+				
+				listNodesInFringe.push_back(graphNodes[j]);
 
 				}
 
-			// End decrease fringe's level
+			}
 
-			discoveredFringeLevels++;
+		
 
-		} while (maxEccentricity <= 2 * maxElement && maxElement > 0);
+		// End decrease fringe's level
+
+		discoveredFringeLevels++;
+
+	} ;
+
+	std::cout << "La massima eccentricità per i nodi sulla frangia a distanza " << fringeLevel << " è: " << maxEccentricity << "\n";
+	
+
+
+
+
+	// Result of algo
 
 	std::cout << ">> [graph-diameter]=\"" << maxEccentricity << "\"\n";
 	std::cout << ">> [discovered-fringe-levels]=\"" << discoveredFringeLevels << "\"\n";
-	std::cout << ">> [BFS executed]=\"" << discoveredFringeLevels++ << "\"\n";
+	std::cout << ">> [BFS executed]=\"" << BFS_executed << "\"\n";
 
-	} else {
-		std::cout << ">> [graph-diameter]=\"" << maxEccentricity << "\"\n";
-	}
 
-	// NetworKit::Diameter diameter(graph);
-	// diameter.run();
-	// std::pair<NetworKit::count,NetworKit::count> truediameter = diameter.getDiameter();
-	// std::cout << "il vero diametro è : " << truediameter.first;
+
+
+	// Result of NetworKit algo
+
+	NetworKit::Diameter diameter(graph);
+	diameter.run();
+	std::pair<NetworKit::count,NetworKit::count> truediameter = diameter.getDiameter();
+	std::cout << "il vero diametro è : " << truediameter.first;
 
 	
   
