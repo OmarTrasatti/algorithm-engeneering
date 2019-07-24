@@ -5,7 +5,7 @@ VALGRIND = -g -DNDEBUG
 
 TARGET_A = graph_diameter_stats
 
-OPTIONS = -lnetworkit -lboost_serialization -lboost_program_options -lboost_system -lboost_filesystem -fopenmp -lboost_timer
+OPTIONS = -lnetworkit -lboost_serialization -lboost_program_options -lboost_iostreams -lboost_system -lboost_filesystem -fopenmp -lboost_timer
 INCLUDEPATH = $(HOME)/networkit/build_lib/include/ -I/usr/include/valgrind
 PATHLIB = $(HOME)/networkit/build_lib/
 SOURCES_A = $(TARGET_A).cpp Auxiliary.cpp

@@ -9,6 +9,12 @@
 #define AUXILIARY_H_
 
 #include <NetworKit/graph/Graph.h>
+#include <NetworKit/io/SNAPGraphReader.h>
+#include <NetworKit/io/KONECTGraphReader.h>
+#include <NetworKit/io/METISGraphReader.h>
+#include <NetworKit/distance/BFS.h>
+#include <NetworKit/distance/Diameter.h>
+#include <NetworKit/generators/HavelHakimiGenerator.h>
 #include <boost/filesystem.hpp>
 #include <dirent.h>
 

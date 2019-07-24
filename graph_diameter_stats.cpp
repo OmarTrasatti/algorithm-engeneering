@@ -9,13 +9,7 @@
 
 
 #include "Auxiliary.h"
-#include <NetworKit/io/SNAPGraphReader.h>
-#include <NetworKit/io/KONECTGraphReader.h>
-#include <NetworKit/io/METISGraphReader.h>
-#include <NetworKit/distance/BFS.h>
-#include <NetworKit/distance/Diameter.h>
 #include <boost/program_options.hpp>
-
 
 using namespace std; 
 
@@ -23,10 +17,15 @@ using namespace std;
 bool sortbysec(const pair<int,int> &a, 
               const pair<int,int> &b) 
 { 
-    return (a.second > b.second); 
+    return (a.second < b.second); 
 } 
 
+
+
+
+	
 int main(int argc, char** argv) {
+	
 	
 	// START ALGORITHM SETUP 
 	// Passing (?) variables for computing algorithm
@@ -80,15 +79,12 @@ int main(int argc, char** argv) {
 	// NetworKit::METISGraphReader readerMetis;
 	// NetworKit::Graph graph = readerMetis.read(graph_location);
 
-	NetworKit::KONECTGraphReader readerKonect;
-	NetworKit::Graph graph = readerKonect.read(graph_location);
+	 NetworKit::KONECTGraphReader readerKonect;
+	 NetworKit::Graph graph = readerKonect.read(graph_location);
 
 
 	// NetworKit::SNAPGraphReader readerSnap;
 	// NetworKit::Graph graph = readerSnap.read(graph_location);
-
-
-
 
 
 
@@ -100,13 +96,39 @@ int main(int argc, char** argv) {
 	vector<NetworKit::node> graphNodes = graph.nodes();
 
 	cout << "Numero di nodi nel grafo: " << graph.numberOfNodes() << "\n";
-	cout << "Numero di nodi nel grafo: " << graph.numberOfEdges() << "\n";
+	cout << "Numero di archi nel grafo: " << graph.numberOfEdges() << "\n";
+
+	int sumOfDegrees = 0;
+	graph.forNodes([&sumOfDegrees, &graph](NetworKit::node node) {
+		 	sumOfDegrees = sumOfDegrees + graph.degree(node);
+		});
+
+	double averageDegrees = static_cast<double>(sumOfDegrees)/static_cast<double>(graphNodes.size());
+	double variance = 0;
+	double sumTerm = 0;
+
+	for (int i=0;i<graphNodes.size();i++){
+		sumTerm = pow((graph.degree(graphNodes[i])-averageDegrees), 2.0);
+		variance = variance + (pow((graph.degree(graphNodes[i])-averageDegrees), 2.0));
+	}
+
+	double realVariance = static_cast<double>(variance)/static_cast<double>(graphNodes.size());
+    
+	cout << "Il grado medio è " << averageDegrees << "\n";
+	cout << "La varianza del grado è: " << realVariance << "\n";
+
+	// Start chrono
+	
+	
 
 	NetworKit::count maxDegree = graph.maxDegree();
 
 	cout << "Il degree più alto è: " << maxDegree << "\n";
 	NetworKit::node firstSource;
 	
+
+	// getting max degree node
+
 	graph.forNodes([maxDegree, &firstSource, &graph](NetworKit::node node) {
 		 	if(maxDegree == graph.degree(node)) {
 				firstSource = node;
@@ -123,7 +145,7 @@ int main(int argc, char** argv) {
 
 	int BFS_executed = 1;
 
-	cout << "Faccio la prima BFS, a partire dalla sorgente " << firstSource <<  "\n \n";
+	// cout << "Faccio la prima BFS, a partire dalla sorgente " << firstSource <<  "\n \n";
 
 	vector<NetworKit::edgeweight> distances = firstBfs.getDistances();
 	
@@ -131,7 +153,12 @@ int main(int argc, char** argv) {
 	// Get u's eccentricity, alias i (last level of the first BFS)
 
 	double fringeLevel = 0;
+	
 
+	// try openMP
+	
+	
+	#pragma omp parallel for
 	for (int j = 0; j < distances.size() ; j++) {
 	
 		if (distances[j] <= graph.numberOfNodes() && fringeLevel <= distances[j]) {
@@ -140,11 +167,13 @@ int main(int argc, char** argv) {
 	}
 	
 
+	
+
 	// Pick the farest nodes from u (source of initial BFS)
 
-	list<NetworKit::node> listNodesInFringe;
+	vector<NetworKit::node> listNodesInFringe;
 	cout << "compongo la frangia iniziale mettendo nella lista i nodi a massima distanza " << fringeLevel << "\n";
-
+	#pragma omp parallel for
 	for (int i = 0; i < distances.size() ; i++) {
 		
 		if (distances[i] == fringeLevel){
@@ -155,49 +184,54 @@ int main(int argc, char** argv) {
 
 	}
 
+	
 	cout << "\n \n";
 
 	double lowerBound = fringeLevel;
-	int discoveredFringeLevels = 0;
+	// int discoveredFringeLevels = 0;
 	
 
 	NetworKit::node element;
 	int newEccentricity = 0;
-
+	auto start = chrono::steady_clock::now();
 	
-	while (lowerBound <= (2 * fringeLevel)) {
+	
+	
+	while (lowerBound <= (2 * (fringeLevel - 1))) {
 
 		cout << "La frangia a distanza " << fringeLevel << " contiene " << listNodesInFringe.size() << " nodi \n \n";
 		int numberOfBfsOnFringe = 0;
 		// For all the nodes in the actual fringe..
-		while(!listNodesInFringe.empty()) {
+		int listNodesInFringeSize = listNodesInFringe.size();
+
+		// #pragma omp parallel for shared(listNodesInFringeSize, lowerBound) 
+		for (int i = 0; i < listNodesInFringeSize; i++){
+		// while(!listNodesInFringe.empty()) 
+			bool result = lowerBound <= (2 * fringeLevel);
+			std::cout << ">>>>>>o<<<<<< [lowerBound <= (2 * fringeLevel)]=" << result << "\n";
+			if (lowerBound <= (2 * fringeLevel)) {
 
 			newEccentricity = 0;
 
 			// Take one of these nodes
-			element = listNodesInFringe.front();
-			cout << "Il nodo sul quale faccio la bfs è il nodo " << element << "\n";
-
-			listNodesInFringe.pop_front();
-
-
-			// Execute a BFS from actual
-			NetworKit::BFS onFringeBfs(graph, element);
+			
+			cout << "Il nodo sul quale faccio la bfs è il nodo " << listNodesInFringe[i] << "\n";
+			
+			// // Execute a BFS from actual
+			NetworKit::BFS onFringeBfs(graph, listNodesInFringe[i]);
 			onFringeBfs.run();
 
 
-			// Update the number of BFS executed (on fringe and total)
+			// // Update the number of BFS executed (on fringe and total)
 			numberOfBfsOnFringe++;
-			BFS_executed ++;
-			cout << "Sto alla " << numberOfBfsOnFringe << "_a BFS, eseguita sulla frangia a distanza " << fringeLevel;
+			BFS_executed++;
+			cout << "Sto alla " << numberOfBfsOnFringe << "_a BFS, eseguita sulla frangia a distanza " << fringeLevel << "\n";
 
 
-			// Calculate the eccentricity of actual node 
+			// // Calculate the eccentricity of actual node 
 			vector<NetworKit::edgeweight> onFringeNodeDistances = onFringeBfs.getDistances();
-	
+
 			for (int j = 0; j < onFringeNodeDistances.size() ; j++) {
-				
-	
 				if (onFringeNodeDistances[j] <= graph.numberOfNodes() && newEccentricity < onFringeNodeDistances[j]) {
 					newEccentricity = onFringeNodeDistances[j];
 				}
@@ -206,125 +240,98 @@ int main(int argc, char** argv) {
 			cout << ", e l'eccentricità del nodo, risultante dalla BFS è: " << newEccentricity << "\n \n";
 
 		
-			// 
+			// // 
 			if (newEccentricity > lowerBound) { 
+				#pragma omp atomic write
 				lowerBound = newEccentricity;
 				} 
-
-			if (lowerBound > (2 * (fringeLevel-1))) {
-				cout << "BREAK!!! Ho trovato che la massima eccentricità " << lowerBound << " supera l'upperbound " << 2*(fringeLevel-1) << " \n \n";
-				break;
 			}
+
+		
 		}
 
-		if (lowerBound > (2 * (fringeLevel-1))) {			
-			break;
-		}
+	
 		
-		cout << "La massima eccentricità per i nodi sulla frangia a distanza " << fringeLevel << " è: " << lowerBound << "\n \n";
+		//cout << "La massima eccentricità per i nodi sulla frangia a distanza " << fringeLevel << " è: " << lowerBound << "\n \n";
 
 		// Decrease fringe's level
 		fringeLevel = fringeLevel - 1;
 
 		// Populate new Fringe (indeed, level i-1), ordering nodes by MaxDegree
 
-		for (int j = 0; j < distances.size() ; j++) {
-	
-			if (distances[j] == fringeLevel) {
-			
-			listNodesInFringe.push_back(graphNodes[j]);
+		listNodesInFringe.clear();
 
+		for (int j = 0; j < distances.size(); j++) {
+			if (distances[j]==fringeLevel){
+				listNodesInFringe.push_back(graphNodes[j]);
 			}
-
 		}
 
-		//End populate new Fringe
-
-
-
-		// //Check nodes in new fringe
-
-		// cout << "i nodi sulla frangia a distanza " << fringeLevel << " sono: " << listNodesInFringe.size() << ", in particolare: ";
-		// list<NetworKit::node> temp = listNodesInFringe;
-		// int tempSize = temp.size();
-		// for (int j = 0; j < tempSize ; j++) {
-		// 	cout << temp.front() <<" -";
-		// 	temp.pop_front();
+		// vector< pair<NetworKit::node,int> > coupleVector;
+		
+		// for (int j = 0; j < distances.size(); j++) {
+		// 	if (distances[j] == fringeLevel) {
+		// 	coupleVector.push_back(make_pair(graphNodes[j],graph.degree(j)));			
+		// 	}
 		// }
 
-		// cout << "\n";
-
-		// // end check nodes in new fringe
-
-
-
-		// Populate vector of pair <node,degree> and sort it
-
-		vector<pair<NetworKit::node, NetworKit::count>> arrayInFringe;
-
-		int listNodesInFringeSize = listNodesInFringe.size();
-		for (int j = 0; j < listNodesInFringeSize ; j++) {
-			arrayInFringe.push_back(make_pair(listNodesInFringe.front(),graph.degree(listNodesInFringe.front())));
-			listNodesInFringe.pop_front();
-		}
-
-		sort(arrayInFringe.begin(), arrayInFringe.end(), sortbysec); 
-
-		// end populate vector
-
-
-
-		// // Check right order
-
-		// cout << "Vediamo se sono ordinati per grado: ";
-		// for(auto t=arrayInFringe.begin(); t!=arrayInFringe.end(); ++t){
-		// 	cout << std::get<1>(*t) << " -";
+		// sort(coupleVector.begin(), coupleVector.end(), sortbysec); 
+		// cout << "la frangia è ordinata per degree? \n";
+		// for (int j = 0; j < coupleVector.size(); j++) {
+		// 	cout << "(" << get<1>(coupleVector[j]) << "-";
+		// 	listNodesInFringe.push_back(get<0>(coupleVector[j]));		
+		// 	cout << get<0>(coupleVector[j]) << ") ";	
 		// }
-		// cout << "\n e vediamo se li prende per grado: il nodo " << std::get<0>(arrayInFringe.front()) << " con grado " << std::get<1>(arrayInFringe.front()) << "\n";
 
-		// // end check order
 		
-
-
-		// Populate again fringe by degree 
-		
-		for (int j = 0; j < arrayInFringe.size() ; j++) {	
-		
-			listNodesInFringe.push_back(graphNodes[std::get<0>(arrayInFringe[j])]);
-		}
-
-		// End populate 
-		// End decrease fringe's level
-
-		discoveredFringeLevels++;
 
 	};
-
+	
+	
+	auto end = chrono::steady_clock::now();
+	cout << "Tempo impiegato in millisecondi : " << chrono::duration_cast<chrono::milliseconds>(end - start).count()	<< " ms \n \n ";
 
 
 	// Result of algo
 
 	cout << ">> [graph-diameter]=\"" << lowerBound << "\"\n";
-	cout << ">> [discovered-fringe-levels]=\"" << discoveredFringeLevels<< "\"\n";
+	// cout << ">> [discovered-fringe-levels]=\"" << discoveredFringeLevels<< "\"\n";
 	cout << ">> [BFS-executed]=\"" << BFS_executed << "\"\n";
 
 
 
 
 
+	// cout << "Tempo impiegato in secondi : " << chrono::duration_cast<chrono::seconds>(end - start).count() << " s \n \n ";
+
+
 
 
 	// Result of NetworKit-algo
+
+	auto start1 = chrono::steady_clock::now();
 
 	NetworKit::Diameter diameter(graph);
 	diameter.run();
 	pair<NetworKit::count,NetworKit::count> truediameter = diameter.getDiameter();
 	cout << "il vero diametro è : " << truediameter.first << "\n";
 
-  
+  	auto end1 = chrono::steady_clock::now();
+
+	  cout << "Tempo impiegato in millisecondi da networkit : " 
+		<< chrono::duration_cast<chrono::milliseconds>(end1 - start1).count()
+		<< " ms \n \n ";
+
+	cout << "Tempo impiegato in secondi da networkit: " 
+	<< chrono::duration_cast<chrono::seconds>(end1 - start1).count()
+	<< " s \n \n ";
+
 }
 
 
 
 
 // in un ordine 1632691
+
+
+
