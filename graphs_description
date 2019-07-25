@@ -1,0 +1,244 @@
+com-amazon:
+
+
+Size	n =	334,863
+Volume	m =	925,872
+Loop count	l =	0
+Wedge count	s =	9,752,186
+Claw count	z =	142,823,893
+Cross count	x =	6,722,504,872
+Triangle count	t =	667,129
+Square count	q =	3,125,323
+4-Tour count	T4 =	65,863,072
+Maximum degree	dmax =	549
+Average degree	d =	5.529 86
+Fill	p =	1.651 38 × 10−5
+Size of LCC	N =	334,863
+Diameter	δ =	47
+50-Percentile effective diameter	δ0.5 =	11.076 0
+90-Percentile effective diameter	δ0.9 =	14.851 4
+Median distance	δM =	12
+Mean distance	δm =	11.725 3
+Gini coefficient	G =	0.385 905
+Balanced inequality ratio	P =	0.364 978
+Relative edge distribution entropy	Her =	0.976 681
+Power law exponent	γ =	1.691 22
+Tail power law exponent	γt =	3.581 00
+Tail power law exponent with p	γ3 =	3.581 00
+p-value	p =	0.022 000 0
+Degree assortativity	ρ =	−0.058 819 6
+Degree assortativity p-value	pρ =	0.000 00
+Clustering coefficient	c =	0.205 224
+Spectral norm	α =	23.975 6
+Non-bipartivity	bA =	0.031 835 0
+Normalized non-bipartivity	bN =	0.012 895 0
+Spectral bipartite frustration	bK =	0.001 185 21
+
+
+
+
+
+
+roadNet-PA (pennsylvania):
+
+
+Size	n =	1,088,092
+Volume	m =	1,541,898
+Loop count	l =	0
+Wedge count	s =	3,390,667
+Claw count	z =	1,707,904
+Cross count	x =	328,820
+Triangle count	t =	67,150
+Square count	q =	157,802
+4-Tour count	T4 =	17,908,880
+Maximum degree	dmax =	9
+Average degree	d =	2.834 13
+Fill	p =	2.604 68 × 10−6
+Size of LCC	N =	1,087,562
+Diameter	δ =	794
+50-Percentile effective diameter	δ0.5 =	296.231
+90-Percentile effective diameter	δ0.9 =	528.609
+Median distance	δM =	297
+Mean distance	δm =	312.578
+Gini coefficient	G =	0.188 029
+Balanced inequality ratio	P =	0.435 923
+Relative edge distribution entropy	Her =	0.994 680
+Power law exponent	γ =	2.052 82
+Tail power law exponent	γt =	8.991 00
+Tail power law exponent with p	γ3 =	8.991 00
+p-value	p =	0.000 00
+Degree assortativity	ρ =	+0.122 749
+Degree assortativity p-value	pρ =	0.000 00
+Clustering coefficient	c =	0.059 413 1
+Spectral norm	α =	4.419 54
+Algebraic connectivity	a =	1.708 84 × 10−6
+Non-bipartivity	bA =	0.111 397
+Normalized non-bipartivity	bN =	0.001 041 12
+Spectral bipartite frustration	bK =	0.000 183 671
+
+
+
+
+
+
+
+California
+
+Size	n =	1,965,206
+Volume	m =	2,766,607
+Loop count	l =	0
+Wedge count	s =	5,995,090
+Claw count	z =	2,952,147
+Cross count	x =	550,344
+Triangle count	t =	120,676
+Square count	q =	262,339
+4-Tour count	T4 =	31,612,286
+Maximum degree	dmax =	12
+Average degree	d =	2.815 59
+Fill	p =	1.432 72 × 10−6
+Size of LCC	N =	1,957,027
+Diameter	δ =	865
+50-Percentile effective diameter	δ0.5 =	303.852
+90-Percentile effective diameter	δ0.9 =	511.075
+Median distance	δM =	304
+Mean distance	δm =	315.889
+Gini coefficient	G =	0.185 512
+Balanced inequality ratio	P =	0.438 309
+Relative edge distribution entropy	Her =	0.995 082
+Power law exponent	γ =	2.055 71
+Tail power law exponent	γt =	8.991 00
+Degree assortativity	ρ =	+0.126 042
+Degree assortativity p-value	pρ =	0.000 00
+Clustering coefficient	c =	0.060 387 4
+Spectral norm	α =	4.638 36
+Algebraic connectivity	a =	5.646 78 × 10−7
+Non-bipartivity	bA =	0.152 274
+Normalized non-bipartivity	bN =	0.000 418 791
+Algebraic non-bipartivity	χ =	0.000 829 045
+Spectral bipartite frustration	bK =	7.347 08 × 10−5
+
+
+
+
+
+
+Hyves
+
+
+Size	n =	1,402,673
+Volume	m =	2,777,419
+Loop count	l =	0
+Wedge count	s =	1,447,128,030
+Claw count	z =	10,748,028,522,268
+Cross count	x =	73,480,895,626,790,352
+Triangle count	t =	752,401
+Square count	q =	47,825,228
+4-Tour count	T4 =	6,176,668,782
+Maximum degree	dmax =	31,883
+Average degree	d =	3.960 18
+Fill	p =	2.823 31 × 10−6
+Size of LCC	N =	1,402,673
+Diameter	δ =	10
+50-Percentile effective diameter	δ0.5 =	5.303 47
+90-Percentile effective diameter	δ0.9 =	6.649 47
+Median distance	δM =	6
+Mean distance	δm =	5.755 60
+Gini coefficient	G =	0.650 239
+Balanced inequality ratio	P =	0.238 800
+Relative edge distribution entropy	Her =	0.905 995
+Power law exponent	γ =	2.658 00
+Tail power law exponent	γt =	1.961 00
+Degree assortativity	ρ =	−0.023 415 2
+Degree assortativity p-value	pρ =	0.000 00
+Clustering coefficient	c =	0.001 559 78
+Spectral norm	α =	179.347
+Non-bipartivity	bA =	0.001 090 33
+Normalized non-bipartivity	bN =	0.020 659 5
+Algebraic non-bipartivity	χ =	0.040 182 3
+Spectral bipartite frustration	bK =	0.002 536 64
+
+
+
+
+
+
+Pester-carnivore
+
+
+Size	n =	623,766
+Volume	m =	15,699,276
+Loop count	l =	4,110
+Wedge count	s =	69,385,263,164
+Claw count	z =	1,209,782,326,650,986
+Cross count	x =	2.142 41 × 1019
+Triangle count	t =	656,390,451
+Square count	q =	770,091,837,319
+4-Tour count	T4 =	6,438,307,141,540
+Maximum degree	dmax =	80,637
+Average degree	d =	50.337 1
+Fill	p =	8.069 85 × 10−5
+Size of LCC	N =	601,213
+Diameter	δ =	15
+50-Percentile effective diameter	δ0.5 =	3.510 76
+90-Percentile effective diameter	δ0.9 =	5.207 71
+Median distance	δM =	4
+Mean distance	δm =	4.101 62
+Gini coefficient	G =	0.767 780
+Balanced inequality ratio	P =	0.203 553
+Relative edge distribution entropy	Her =	0.860 330
+Power law exponent	γ =	1.378 63
+Tail power law exponent	γt =	2.131 00
+Degree assortativity	ρ =	−0.085 620 5
+Degree assortativity p-value	pρ =	0.000 00
+Clustering coefficient	c =	0.028 380 3
+Spectral norm	α =	1,190.93
+Algebraic connectivity	a =	0.000 850 501
+Spectral separation	|λ1[A] / λ2[A]| =	1.372 33
+Non-bipartivity	bA =	0.147 442
+Normalized non-bipartivity	bN =	0.071 405 9
+Controllability	C =	74,397
+
+
+
+
+
+
+
+
+pester-friendships-cat-uniq
+
+
+
+Size	n =	149,700
+Volume	m =	5,449,275
+Loop count	l =	1,078
+Wedge count	s =	50,615,774,277
+Claw count	z =	1,084,712,871,297,358
+Cross count	x =	2.026 55 × 1019
+Triangle count	t =	185,462,177
+Square count	q =	427,574,757,984
+4-Tour count	T4 =	3,623,072,057,374
+Maximum degree	dmax =	80,635
+Average degree	d =	72.802 6
+Fill	p =	0.000 486 320
+Size of LCC	N =	148,826
+Diameter	δ =	10
+50-Percentile effective diameter	δ0.5 =	2.157 25
+90-Percentile effective diameter	δ0.9 =	2.935 24
+Median distance	δM =	3
+Mean distance	δm =	2.651 22
+Gini coefficient	G =	0.770 961
+Balanced inequality ratio	P =	0.197 126
+Relative edge distribution entropy	Her =	0.826 455
+Power law exponent	γ =	1.335 16
+Tail power law exponent	γt =	2.121 00
+Degree assortativity	ρ =	−0.164 158
+Degree assortativity p-value	pρ =	0.000 00
+Clustering coefficient	c =	0.010 992 4
+Spectral norm	α =	1,181.57
+Algebraic connectivity	a =	0.106 892
+Non-bipartivity	bA =	0.135 295
+Normalized non-bipartivity	bN =	0.025 052 7
+Algebraic non-bipartivity	χ =	0.107 570
+Spectral bipartite frustration	bK =	0.000 367 287
+

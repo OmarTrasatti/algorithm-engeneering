@@ -116,6 +116,20 @@ int main(int argc, char** argv) {
     
 	cout << "Il grado medio è " << averageDegrees << "\n";
 	cout << "La varianza del grado è: " << realVariance << "\n";
+	
+	double standardDeviation = sqrt (realVariance);
+
+	cout << "La deviazione standard è: " << standardDeviation << "\n";
+
+	int inDeviation = 0;
+	for (int i=0;i<graphNodes.size();i++){
+		if (graph.degree(graphNodes[i]) > (averageDegrees-standardDeviation) && graph.degree(graphNodes[i])<=(averageDegrees+standardDeviation)){
+			inDeviation++;
+		}
+	}
+cout << "INDEVIATION= " << inDeviation << "\n";
+	double distributionPercentage = static_cast<double>(inDeviation)/static_cast<double>(graphNodes.size());
+	cout << "La distribuzione rispetto alla media+-varianza è: " << distributionPercentage << "\n";
 
 	// Start chrono
 	
@@ -204,7 +218,7 @@ int main(int argc, char** argv) {
 		// For all the nodes in the actual fringe..
 		int listNodesInFringeSize = listNodesInFringe.size();
 
-		// #pragma omp parallel for shared(listNodesInFringeSize, lowerBound) 
+		#pragma omp parallel for num_threads(1)
 		for (int i = 0; i < listNodesInFringeSize; i++){
 		// while(!listNodesInFringe.empty()) 
 			bool result = lowerBound <= (2 * fringeLevel);
