@@ -29,9 +29,9 @@ PATHLIB = //your/networkit/build/path
 
 ### Usage
 
-`./graph_diameter_stats <options>
+`./graph_diameter_stats <options>`
 
 #### Options
 
 - `-g`: Input graph file location.
-- `(Optional) -t`:  Number of councurrent threads in concurrent execution. (By default the max number of logic cores)
+- `-t` (Optional):  Number of councurrent threads in concurrent execution. (By default the max number of logic cores)
