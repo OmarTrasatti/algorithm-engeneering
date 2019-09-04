@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
 
 	desc.add_options()
 	("graph_location,g", po::value<string>(), "Input Graph File Location (in case of -a 1)")
-	("source,s", po::value<int>(), "Source Node");
+	("threads,t", po::value<int>(), "Number of councurrent threads");
 
 
 	po::variables_map vm;
@@ -46,23 +46,19 @@ int main(int argc, char** argv) {
 
 	// Compute source and graph path location
 
-	int source = -1;
 	string graph_location;
+	int numberOfThreads = 8;
 
 	if (vm.empty()){
 		cout << desc << "\n";
 		throw runtime_error("Empty options");
 	}
-	if (vm.count("source"))
-		source = vm["source"].as<int>();
 
 	if (vm.count("graph_location"))
 		graph_location = vm["graph_location"].as<string>();
     
-	if(source<0){
-        cout << desc << "\n";
-        throw runtime_error("wrong source");
-	}
+	if (vm.count("threads"))
+		numberOfThreads = vm["threads"].as<int>();
 
 	if(graph_location == ""){
 		cout << desc << "\n";
@@ -73,8 +69,7 @@ int main(int argc, char** argv) {
 	
 
 
-
-
+	cout << "\n [concurrent-threads]:" <<  numberOfThreads << "\n";
 
 	// NetworKit::METISGraphReader readerMetis;
 	// NetworKit::Graph graph = readerMetis.read(graph_location);
@@ -172,7 +167,7 @@ cout << "INDEVIATION= " << inDeviation << "\n";
 	// try openMP
 	
 	
-	#pragma omp parallel for
+	#pragma omp parallel for num_threads(numberOfThreads)
 	for (int j = 0; j < distances.size() ; j++) {
 	
 		if (distances[j] <= graph.numberOfNodes() && fringeLevel <= distances[j]) {
@@ -187,7 +182,7 @@ cout << "INDEVIATION= " << inDeviation << "\n";
 
 	vector<NetworKit::node> listNodesInFringe;
 	cout << "compongo la frangia iniziale mettendo nella lista i nodi a massima distanza " << fringeLevel << "\n";
-	#pragma omp parallel for
+	#pragma omp parallel for num_threads(numberOfThreads)
 	for (int i = 0; i < distances.size() ; i++) {
 		
 		if (distances[i] == fringeLevel){
@@ -218,7 +213,7 @@ cout << "INDEVIATION= " << inDeviation << "\n";
 		// For all the nodes in the actual fringe..
 		int listNodesInFringeSize = listNodesInFringe.size();
 
-		#pragma omp parallel for num_threads(1)
+		#pragma omp parallel for num_threads(numberOfThreads)
 		for (int i = 0; i < listNodesInFringeSize; i++){
 		// while(!listNodesInFringe.empty()) 
 			bool result = lowerBound <= (2 * fringeLevel);
