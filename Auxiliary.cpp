@@ -2,7 +2,7 @@
  * Auxiliary.cpp
  *
  *  Created on: 01 feb 2016
- *      Author: Mattia D'Emidio
+ *  Author: Mattia D'Emidio
  */
 
 #include "Auxiliary.h"

@@ -1,4 +1,4 @@
-CXX = g++ -std=c++14
+CXX = g++-8 -std=c++14
 DBG = -g
 OPT = -O3 -DNDEBUG
 VALGRIND = -g -DNDEBUG
@@ -6,8 +6,8 @@ VALGRIND = -g -DNDEBUG
 TARGET_A = graph_diameter_stats
 
 OPTIONS = -lnetworkit -lboost_serialization -lboost_program_options -lboost_iostreams -lboost_system -lboost_filesystem -fopenmp -lboost_timer
-INCLUDEPATH = $(HOME)/networkit/build_lib/include/ -I/usr/include/valgrind
-PATHLIB = $(HOME)/networkit/build_lib/
+INCLUDEPATH = $(HOME)/univaq/networkit/build_lib/include/ -I/usr/include/valgrind
+PATHLIB = $(HOME)/univaq/networkit/build_lib/
 SOURCES_A = $(TARGET_A).cpp Auxiliary.cpp
 
 debug:
