@@ -1,29 +1,37 @@
-## GRAPH_NAME: 
+# Algorithm Engeneering - Fringe Algorithm Implementation
 
-***out.petster-carnivore***
+## Students: Guidotti Livio - Omar Trasatti
 
-## RESULTS: 
+### Requirements
 
-``` bash
-Numero di nodi nel grafo: 623766
-Numero di archi nel grafo: 15699276
+1. NetworKit (only c++-core, see [here](https://networkit.github.io/) for further informations).
+2. gcc/g++ 8.x
+3. Boost C++ Lib
 
-Il grado medio è 50
-La varianza del grado è: 0.330249
+### Setup
+
+1. Update the directories on `Makefile` for building the application:
+
+```
+CXX = g++-8 -std=c++14 // Edit with your c++ / g++ versions
+
+...
+
+INCLUDEPATH = //your/networkit/build/path/include
+PATHLIB = //your/networkit/build/path
+
 ```
 
-``` bash
->> [graph-diameter]="15"
->> [BFS-executed]="3"
-Tempo impiegato in millisecondi : `2676 ms`
-```
+2. Export your *libnetworkit.so* path before running the application.
 
-``` bash
-Tempo impiegato in secondi : `2 s`
-    
-[INFO ]: 9 BFS used
-il vero diametro è : 15
-Tempo impiegato in millisecondi da networkit : 1522 ms 
+`export LD_LIBRARY_PATH=//your/networkit/build/path` 
 
-Tempo impiegato in secondi da networkit: 1 s 
-```
+
+### Usage
+
+`./graph_diameter_stats <options>
+
+#### Options
+
+- `-g`: Input graph file location.
+- `(Optional) -t`:  Number of councurrent threads in concurrent execution. (By default the max number of logic cores)
